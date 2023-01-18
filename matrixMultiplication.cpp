@@ -101,7 +101,7 @@ int** strassen(int** A, int** B) {
     return R;
 }
 
-int** strassen(int** A, int** B, int seuil) {
+int** strassenSeuil(int** A, int** B, int seuil) {
     int n = A[0].lenght();
     int R[n][n];
 
