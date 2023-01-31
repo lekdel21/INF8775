@@ -101,7 +101,6 @@ def strassenSeuil(A, B, seuil):
     if n <= pow(2, seuil): 
         R = conv(A, B)
         return R
-    print("pass1")
 
     A11 = sectionner(A, 0, 0)
     A12 = sectionner(A, 0, int(n/2))
