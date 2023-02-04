@@ -6,8 +6,8 @@ def main():
     timeConv = 0
     timeStrassen = 0
 
-    for i in range(10, 11):
-        for j in range(0, 1, 2):
+    for i in range(3, 9):
+        for j in range(0, 6, 2):
             
             with open("ex"+str(i)+"_"+str(j), 'r') as f:
                 m1 = [[int(num) for num in line.split(' ')] for line in f]
@@ -20,7 +20,7 @@ def main():
             R = matrix.strassenSeuil(m1, m2, 216)
             end = time.time()
             timeStrassen += end - start
-            if j >= 0:
+            if j >= 3:
                 print("time Strassen " + str(i) + ": " + str(timeStrassen/3))
                 timeStrassen = 0
             
@@ -28,7 +28,7 @@ def main():
             R = matrix.conv(m1, m2)
             end = time.time()
             timeConv += end - start
-            if j >= 0:
+            if j >= 3:
                 print("time Conv " + str(i) + ": " + str(timeConv/3))
                 timeConv = 0
             
