@@ -68,16 +68,30 @@ def strassen(A, B):
     if n == 1: 
         R[0][0] = A[0][0] * B[0][0]
         return R
-
-    A11 = sectionner(A, 0, 0)
-    A12 = sectionner(A, 0, int(n/2))
-    A21 = sectionner(A, int(n/2), 0)
-    A22 = sectionner(A, int(n/2), int(n/2))
     
-    B11 = sectionner(B, 0, 0)
-    B12 = sectionner(B, 0, int(n/2))
-    B21 = sectionner(B, int(n/2), 0)
-    B22 = sectionner(B, int(n/2), int(n/2))
+    k = int((len(A[0]))/2)
+    A11 = [[0 for _ in range(k)] for _ in range(k)]
+    A12 = [[0 for _ in range(k)] for _ in range(k)]
+    A21 = [[0 for _ in range(k)] for _ in range(k)]
+    A22 = [[0 for _ in range(k)] for _ in range(k)]
+    
+    B11 = [[0 for _ in range(k)] for _ in range(k)]
+    B12 = [[0 for _ in range(k)] for _ in range(k)]
+    B21 = [[0 for _ in range(k)] for _ in range(k)]
+    B22 = [[0 for _ in range(k)] for _ in range(k)]
+
+    
+    for i in range(0, k):
+        for j in range(0, k):
+            A11[i][j] = A[i][j]
+            A12[i][j] = A[i][j + k]
+            A21[i][j] = A[i + k][j]
+            A22[i][j] = A[i + k][j + k]
+            
+            B11[i][j] = B[i][j]
+            B12[i][j] = B[i][j + k]
+            B21[i][j] = B[i + k][j]
+            B22[i][j] = B[i + k][j + k]
 
     P5 = strassen(adder(A11, A22), adder(B11, B22))         #P5
     P3 = strassen(adder(A21, A22), B11)                     #P3
@@ -98,20 +112,33 @@ def strassenSeuil(A, B, seuil):
     n = len(A[0])
     R = [[0 for _ in range(n)] for _ in range(n)]
     
-    if n <= pow(2, seuil): 
+    if n <= seuil: 
         R = conv(A, B)
         return R
-    print("pass1")
 
-    A11 = sectionner(A, 0, 0)
-    A12 = sectionner(A, 0, int(n/2))
-    A21 = sectionner(A, int(n/2), 0)
-    A22 = sectionner(A, int(n/2), int(n/2))
+    k = int((len(A[0]))/2)
+    A11 = [[0 for _ in range(k)] for _ in range(k)]
+    A12 = [[0 for _ in range(k)] for _ in range(k)]
+    A21 = [[0 for _ in range(k)] for _ in range(k)]
+    A22 = [[0 for _ in range(k)] for _ in range(k)]
     
-    B11 = sectionner(B, 0, 0)
-    B12 = sectionner(B, 0, int(n/2))
-    B21 = sectionner(B, int(n/2), 0)
-    B22 = sectionner(B, int(n/2), int(n/2))
+    B11 = [[0 for _ in range(k)] for _ in range(k)]
+    B12 = [[0 for _ in range(k)] for _ in range(k)]
+    B21 = [[0 for _ in range(k)] for _ in range(k)]
+    B22 = [[0 for _ in range(k)] for _ in range(k)]
+
+    
+    for i in range(0, k):
+        for j in range(0, k):
+            A11[i][j] = A[i][j]
+            A12[i][j] = A[i][j + k]
+            A21[i][j] = A[i + k][j]
+            A22[i][j] = A[i + k][j + k]
+            
+            B11[i][j] = B[i][j]
+            B12[i][j] = B[i][j + k]
+            B21[i][j] = B[i + k][j]
+            B22[i][j] = B[i + k][j + k]
 
     P5 = strassen(adder(A11, A22), adder(B11, B22))         #P5
     P3 = strassen(adder(A21, A22), B11)                     #P3
