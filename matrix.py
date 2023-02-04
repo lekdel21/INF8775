@@ -68,6 +68,7 @@ def strassen(A, B):
     if n == 1: 
         R[0][0] = A[0][0] * B[0][0]
         return R
+<<<<<<< HEAD
     
     k = int((len(A[0]))/2)
     A11 = [[0 for _ in range(k)] for _ in range(k)]
@@ -92,6 +93,18 @@ def strassen(A, B):
             B12[i][j] = B[i][j + k]
             B21[i][j] = B[i + k][j]
             B22[i][j] = B[i + k][j + k]
+=======
+
+    A11 = sectionner(A, 0, 0)
+    A12 = sectionner(A, 0, int(n/2))
+    A21 = sectionner(A, int(n/2), 0)
+    A22 = sectionner(A, int(n/2), int(n/2))
+    
+    B11 = sectionner(B, 0, 0)
+    B12 = sectionner(B, 0, int(n/2))
+    B21 = sectionner(B, int(n/2), 0)
+    B22 = sectionner(B, int(n/2), int(n/2))
+>>>>>>> 0973625204d5916cd5e7b25a5dd8d172e927b14c
 
     P5 = strassen(adder(A11, A22), adder(B11, B22))         #P5
     P3 = strassen(adder(A21, A22), B11)                     #P3
