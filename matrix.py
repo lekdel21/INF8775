@@ -60,6 +60,20 @@ def adder(A, B):
 
     return R
 
+def get_matrix_quadrants(matrix):
+    # Matrix : 
+    # |top_left top_right|
+    # |bot_left bot_right|
+    n_rows, n_cols = len(matrix[1]), len(matrix[0])
+    mid_rows, mid_cols = n_rows//2, n_cols//2
+
+    top_left = [row[:mid_cols] for row in matrix[:mid_rows]]
+    top_right = [row[mid_cols:] for row in matrix[:mid_rows]]
+    bot_left = [row[:mid_cols] for row in matrix[mid_rows:]]
+    bot_right = [row[mid_cols:] for row in matrix[mid_rows:]]
+
+    return top_left, top_right, bot_left, bot_right
+
 
 def strassen(A, B):
     n = len(A[0])
@@ -69,29 +83,8 @@ def strassen(A, B):
         R[0][0] = A[0][0] * B[0][0]
         return R
     
-    k = int((len(A[0]))/2)
-    A11 = [[0 for _ in range(k)] for _ in range(k)]
-    A12 = [[0 for _ in range(k)] for _ in range(k)]
-    A21 = [[0 for _ in range(k)] for _ in range(k)]
-    A22 = [[0 for _ in range(k)] for _ in range(k)]
-    
-    B11 = [[0 for _ in range(k)] for _ in range(k)]
-    B12 = [[0 for _ in range(k)] for _ in range(k)]
-    B21 = [[0 for _ in range(k)] for _ in range(k)]
-    B22 = [[0 for _ in range(k)] for _ in range(k)]
-
-    
-    for i in range(0, k):
-        for j in range(0, k):
-            A11[i][j] = A[i][j]
-            A12[i][j] = A[i][j + k]
-            A21[i][j] = A[i + k][j]
-            A22[i][j] = A[i + k][j + k]
-            
-            B11[i][j] = B[i][j]
-            B12[i][j] = B[i][j + k]
-            B21[i][j] = B[i + k][j]
-            B22[i][j] = B[i + k][j + k]
+    A11, A12, A21, A22 = get_matrix_quadrants(A)
+    B11, B12, B21, B22 = get_matrix_quadrants(B)
 
     P5 = strassen(adder(A11, A22), adder(B11, B22))         #P5
     P3 = strassen(adder(A21, A22), B11)                     #P3
@@ -116,29 +109,8 @@ def strassenSeuil(A, B, seuil):
         R = conv(A, B)
         return R
 
-    k = int((len(A[0]))/2)
-    A11 = [[0 for _ in range(k)] for _ in range(k)]
-    A12 = [[0 for _ in range(k)] for _ in range(k)]
-    A21 = [[0 for _ in range(k)] for _ in range(k)]
-    A22 = [[0 for _ in range(k)] for _ in range(k)]
-    
-    B11 = [[0 for _ in range(k)] for _ in range(k)]
-    B12 = [[0 for _ in range(k)] for _ in range(k)]
-    B21 = [[0 for _ in range(k)] for _ in range(k)]
-    B22 = [[0 for _ in range(k)] for _ in range(k)]
-
-    
-    for i in range(0, k):
-        for j in range(0, k):
-            A11[i][j] = A[i][j]
-            A12[i][j] = A[i][j + k]
-            A21[i][j] = A[i + k][j]
-            A22[i][j] = A[i + k][j + k]
-            
-            B11[i][j] = B[i][j]
-            B12[i][j] = B[i][j + k]
-            B21[i][j] = B[i + k][j]
-            B22[i][j] = B[i + k][j + k]
+    A11, A12, A21, A22 = get_matrix_quadrants(A)
+    B11, B12, B21, B22 = get_matrix_quadrants(B)
 
     P5 = strassen(adder(A11, A22), adder(B11, B22))         #P5
     P3 = strassen(adder(A21, A22), B11)                     #P3
