@@ -1,6 +1,4 @@
 #!/bin/bash
-python3 inst_gen.py -S4 -t1 -n2
-
 passCounter=0
 
 if [[ "$1" = "-a" ]]; then
@@ -33,6 +31,7 @@ if [[ passCounter < 3 ]]; then
 fi
 
 # Ajouter les flags et initialiser un parametre pour chaque flags.
+python3 inst_gen.py -S${matrix1:2:1} -t1 -n2
 python3 ./main.py $algo $matrix1 $matrix2 $show $time
 
 #Fonction a appler dans le cas d'un erreur.
