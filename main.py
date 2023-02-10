@@ -7,6 +7,13 @@ def main():
     algorithm = sys.argv[1]
     matrixFile1 = sys.argv[2]
     matrixFile2 = sys.argv[3]
+    option1 = ""
+    option2 = ""
+
+    if len(sys.argv) > 4:
+        option1 = sys.argv[4]
+    if len(sys.argv) > 5:
+        option2 = sys.argv[5]
 
     with open(matrixFile1, 'r') as f:
         m1 = [[int(num) for num in line.split(' ')] for line in f]
@@ -30,12 +37,14 @@ def main():
         end = time.time()
 
     
-    print("\nVoici la matrice résultante:\n")
-    for i in range(len(R)):
-        for j in range(len(R)):
-            print(str(R[i][j])+"\t", end='')
-            if j == len(R) - 1: print("\n")
-    print("Temps d'exécution:", str(end-start) + "\n")
+    if option1 == "show" or option2 == "show":
+        for i in range(len(R)):
+            for j in range(len(R)):
+                print(str(R[i][j])+"\t", end='')
+                if j == len(R) - 1: print("\n")
+    
+    if option1 == "time" or option2 == "time":
+        print((end-start)*1000)
     
 
 

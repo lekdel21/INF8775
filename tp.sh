@@ -20,12 +20,20 @@ if [ "$5" = "-e2" ]; then
     ((passCounter=passCounter+1))
 fi
 
-if [[errorCounter != 3]]; then
+if [ "$7" = "-p" ] || [ "$8" = "-p" ]; then
+    show="show"
+fi
+
+if [ "$7" = "-t" ] || [ "$8" = "-t" ]; then
+    time="time"
+fi
+
+if [[ passCounter < 3 ]]; then
     error
 fi
 
 # Ajouter les flags et initialiser un parametre pour chaque flags.
-python3 ./main.py $algo $matrix1 $matrix2
+python3 ./main.py $algo $matrix1 $matrix2 $show $time
 
 #Fonction a appler dans le cas d'un erreur.
 error() {
