@@ -1,62 +1,78 @@
 #!/usr/bin/env python3
 
 # INF8775 - Analyse et conception d'algorithmes
-#   TP1 - Multiplication de Matrices
+#   TP2 - Problème du voyageur de commerce
 #
-#   AUTEUR :
-#     NAHON, Remi - 10 septembre 2021
+#   AUTEURS :
+#     HAOUAS, Mohammed Najib - 06 mars 2021
+#     DANSEREAU, Charles - 15 février 2023
 #
-#   RESUME DES CHANGEMENTS :
-#     10/09/2021 - Disponibilite initiale.
+#   RÉSUMÉ DES CHANGEMENTS :
+#     15/02/2023 - Changement du séparateur pour des tabulations (consistence avec les fichiers "hard")
+#     03/10/2021 - Correction problème génération des fichiers identiques
+#     03/08/2021 - Disponibilité initiale.
 #
 #   USAGE :
-#     Ce script genere les exemplaires requis pour le TP1 portant sur le probleme de la multiplication de matrices.
+#     Ce script génère les exemplaires requis pour le TP2 portant sur le problème du voyageur de commerce.
 #
-#     $ ./inst_gen.py [-h] -S TAILLE_MIN [-t NB_TAILLES] [-n NB_EXEMPLAIRES] [-r RANDOM_SEED]
+#     $ ./inst_gen.py [-h] -s NB_VILLES [-n NB_EXEMPLAIRES] [-x PRÉFIXE]
 #
 #     où :
-#       * TAILLE_MIN est la premiere taille des matrices, qui seront de taille 2^TAILLE_MIN*2^TAILLE_MIN
-#       * NB_TAILLES est le nombre de tailles consécutives à TAILLE_MIN (incluse) que l'on souhaite construire (par defaut)
-#       * NB_EXEMPLAIRES est le nombre d'exemplaires differents construits par taille de matrice (par defaut 5).
+#       * NB_BATIMENTS est la taille du problème et 
+#       * NB_EXEMPLAIRES est le nombre d'exemplaires différents requis (par défaut 1).
 #
-#     Il est necessaire de rendre ce script executable en utilisant chmod +x
-#     Python 3.5 ou ulterieur recommande pour lancer ce script.
+#     Il est nécessaire de rendre ce script exécutable en utilisant chmod +x
+#     Python 3.5 ou ultérieur recommandé pour lancer ce script.
 
 import random
 import argparse
 
+
 if __name__ == "__main__":
     # Parse arguments
     parser = argparse.ArgumentParser()
-    parser.add_argument("-S", "--taille_min", required=True, type=int,
-                        help="Represente la premiere taille des matrices, qui seront de taille 2^S*2^S")
-    parser.add_argument("-t", "--nb_tailles", required=False, default=5, type=int,
-                        help="Represente le nombre de tailles consécutives des matrices à construire : \
-                        pour t, on aura des matrices de tailles allant de 2^S*2^S a 2^(S+t-1)*2^(S+t-1)")
-    parser.add_argument("-n", "--nb_exemplaires",required=False, default=5, type=int,
-                        help="Represente le nombre d'exemplaires d'une meme taille a generer")
-    parser.add_argument("-r", "--random_seed", required=False, default=1, type=int,
-                        help="Represente le germe du generateur de nombres aléatoires")
-    args = parser.parse_args()
+    parser.add_argument("-s", "--taille", \
+                        help="Représente la taille du graphe à générer", \
+                        action='store', required=True, metavar='NB_BATIMENTS', type=int)
+    parser.add_argument("-n", "--nb-exemplaires", \
+                        help="Représente le nombre d'exemplaires d'une même taille à générer", \
+                        action='store', required=False, metavar='NB_EXEMPLAIRES', type=int)
+    parser.add_argument("-x", "--prefixe", \
+                        help="Ajouter le préfixe indiqué aux noms des fichiers", \
+                        action='store', required=False, metavar='PREFIXE', type=str)
 
+    args = parser.parse_args()
+    if not args.nb_exemplaires:
+        args.nb_exemplaires = 1
+    if not args.prefixe:
+        args.prefixe = ''
+    else:
+        args.prefixe = args.prefixe + '_'
 
     # Parameters
-    min_v = 0
-    max_v = 5
-    a = random.seed(args.random_seed)
-    taille_min = args.taille_min
-    nb_tailles = args.nb_tailles
-    nb_exemplaires = args.nb_exemplaires
+    max_coord = 2000
 
-    # Generate
-    for i in range(nb_exemplaires):
-        for j in range(taille_min, taille_min+nb_tailles):
-            with open('ex' + str(j) + '_' + str(i), 'w') as inst:
-                inst.write("%d\n" % j)
-                for k in range(2**j):
-                    for l in range((2**j)-1):
-                        v = random.randint(min_v, max_v)
-                        inst.write("%d " % v)
-                    v = random.randint(min_v, max_v)
-                    inst.write("%d\n" % v)
+    for file_n in range(args.nb_exemplaires):
+        # Record of generated points to avoid duplicates
+        pdict = [(max_coord + 1) * [False] for _ in range(max_coord + 1)]
 
+        # Preallocate
+        res = [2 * [0] for _ in range(args.taille)]
+        
+        # Generate points
+        for i in range(args.taille):
+            res[i][0] = random.randint(0, max_coord)
+            res[i][1] = random.randint(0, max_coord)
+
+            # Point is duplicate? Regenerate.
+            while pdict[res[i][0]][res[i][1]]:
+                res[i][0] = random.randint(0, max_coord)
+                res[i][1] = random.randint(0, max_coord)
+            pdict[res[i][0]][res[i][1]] = True
+
+        # Write
+        with open(args.prefixe + 'N' + str(args.taille) + '_' + str(file_n),'w') as inst:
+            inst.write("%d\n" % args.taille)
+
+            for i in range(args.taille):
+                inst.write("%d  %d\n" % (res[i][0], res[i][1]))

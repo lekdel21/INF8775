@@ -1,41 +1,42 @@
 import sys
-import matrix
+import TSP_algorithms as tsp
 import time
 
 def main():   
     
     algorithm = sys.argv[1]
-    matrixFile1 = sys.argv[2]
-    matrixFile2 = sys.argv[3]
+    coordsFile = sys.argv[2]
+    showTime = sys.argv[3]
+    showPath = sys.argv[4]
 
-    with open(matrixFile1, 'r') as f:
-        m1 = [[int(num) for num in line.split(' ')] for line in f]
-    m1.pop(0)
-    with open(matrixFile2, 'r') as f:
-        m2 = [[int(num) for num in line.split(' ')] for line in f]
-    m2.pop(0)
+    with open(coordsFile, 'r') as f:
+        lines = f.readlines()
+        nCities = int(lines[0])
+        coords = [[int(num) for num in line.split()] for line in lines[1:]]
+
 
     start = time.time()
 
-    if algorithm == "conv":
-        R = matrix.conv(m1, m2)
+    if algorithm == "glouton":
+        path, distance = tsp.greedy(coords, nCities)
         end = time.time()
     
-    elif algorithm == "strassen":
-        R = matrix.strassen(m1, m2)
+    elif algorithm == "progdyn":
+        path, distance = tsp.dynamic(coords, nCities)
         end = time.time()
 
-    elif algorithm == "strassenSeuil":
-        R = matrix.strassenSeuil(m1, m2, 10)
+    elif algorithm == "approx":
+        path, distance = tsp.approximative(coords, nCities)
         end = time.time()
 
+    if showPath:
+        for i in range(len(path)):
+            print(path[i])
     
-    print("\nVoici la matrice résultante:\n")
-    for i in range(len(R)):
-        for j in range(len(R)):
-            print(str(R[i][j])+"\t", end='')
-            if j == len(R) - 1: print("\n")
-    print("Temps d'exécution:", str(end-start) + "\n")
+    if showTime:
+        print((end-start)*1000)
+
+    print(distance)
     
 
 
