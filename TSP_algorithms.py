@@ -58,20 +58,7 @@ def dynamic(coords, nCities):
                 continue
 
             for j in range(nCities):
-                def dynamic(coords, nCities):
-
-    graph = createGraph(coords, nCities)
-
-    dynamicTable = [[None] * nCities for i in range(2**nCities)]
-    for i in range(nCities):
-        dynamicTable[2**i][i] = 0
-    
-    for k in range(1, 2**nCities):
-        for i in range(nCities):
-            
-            if k & (1 << i):
-                continue
-
+                
                 if k & (1 << j):
                     subproblem = k | (1 << i)
                     
@@ -106,7 +93,6 @@ def dynamic(coords, nCities):
     distance += graph[path[-2]][path[-1]]
 
     return path, distance
-
 
 
 
