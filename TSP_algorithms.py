@@ -100,12 +100,11 @@ def dynamic(coords, nCities):
 
 
 
+
 def approximative(coords, nCities):
-    
     graph = createGraph(coords, nCities)
     
-    visited = [False] * nCities
-    visited[0] = True
+    visited_set = set([0])
     path = [0]
 
     priorityQueue = []
@@ -115,23 +114,21 @@ def approximative(coords, nCities):
     while priorityQueue:
         _, i = heapq.heappop(priorityQueue)
         
-        if visited[i]:
+        if i in visited_set:
             continue
         
-        visited[i] = True
+        visited_set.add(i)
         path.append(i)
 
         if len(path) == nCities:
             break
 
         for j in range(nCities):
-            if not visited[j]:
+            if j not in visited_set:
                 heapq.heappush(priorityQueue, (graph[i][j], j))
     
     path.append(0)
 
-    distance = 0
-    for i in range(nCities):
-        distance += graph[path[i]][path[(i+1)%nCities]]
+    distance = sum(graph[path[i]][path[(i+1)%nCities]] for i in range(nCities))
     
     return path, distance
