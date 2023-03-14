@@ -20,8 +20,7 @@ def greedy(coords, nCities):
     graph = createGraph(coords, nCities)
 
     startCity = 0
-    visited = [False] * nCities
-    visited[startCity] = True
+    visited_set = set([startCity])
     path = [startCity]
 
     for i in range(nCities - 1):
@@ -31,16 +30,14 @@ def greedy(coords, nCities):
         
         for j in range(nCities):
             
-            if not visited[j] and graph[path[-1]][j] < smallestDist:
+            if j not in visited_set and graph[path[-1]][j] < smallestDist:
                 closestNeighbor = j
                 smallestDist = graph[path[-1]][j]
 
-        visited[closestNeighbor] = True
+        visited_set.add(closestNeighbor)
         path.append(closestNeighbor)
 
-    distance = 0
-    for i in range(nCities):
-        distance += graph[path[i]][path[(i+1)%nCities]]
+    distance = sum(graph[path[i]][path[(i+1)%nCities]] for i in range(nCities))
 
     return path, distance
 
@@ -61,7 +58,20 @@ def dynamic(coords, nCities):
                 continue
 
             for j in range(nCities):
-                
+                def dynamic(coords, nCities):
+
+    graph = createGraph(coords, nCities)
+
+    dynamicTable = [[None] * nCities for i in range(2**nCities)]
+    for i in range(nCities):
+        dynamicTable[2**i][i] = 0
+    
+    for k in range(1, 2**nCities):
+        for i in range(nCities):
+            
+            if k & (1 << i):
+                continue
+
                 if k & (1 << j):
                     subproblem = k | (1 << i)
                     
