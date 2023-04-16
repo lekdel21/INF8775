@@ -1,62 +1,91 @@
 #!/usr/bin/env python3
 
 # INF8775 - Analyse et conception d'algorithmes
-#   TP1 - Multiplication de Matrices
+#   TP3
 #
-#   AUTEUR :
-#     NAHON, Remi - 10 septembre 2021
+#   AUTEURS :
+#     DANSEREAU, Charles - 13 mars 2023
 #
-#   RESUME DES CHANGEMENTS :
-#     10/09/2021 - Disponibilite initiale.
+#   RÉSUMÉ DES CHANGEMENTS :
+#     13/03/2023 - Disponibilité initiale.
 #
 #   USAGE :
-#     Ce script genere les exemplaires requis pour le TP1 portant sur le probleme de la multiplication de matrices.
+#     Ce script génère les exemplaires requis pour le TP3.
 #
-#     $ ./inst_gen.py [-h] -S TAILLE_MIN [-t NB_TAILLES] [-n NB_EXEMPLAIRES] [-r RANDOM_SEED]
+#     $ ./inst_gen.py -n NB_ENCLOS -m TAILLE-S [-x PRÉFIXE]
 #
 #     où :
-#       * TAILLE_MIN est la premiere taille des matrices, qui seront de taille 2^TAILLE_MIN*2^TAILLE_MIN
-#       * NB_TAILLES est le nombre de tailles consécutives à TAILLE_MIN (incluse) que l'on souhaite construire (par defaut)
-#       * NB_EXEMPLAIRES est le nombre d'exemplaires differents construits par taille de matrice (par defaut 5).
+#       * NB_BATIMENTS est la taille du problème et 
+#       * NB_EXEMPLAIRES est le nombre d'exemplaires différents requis (par défaut 1).
 #
-#     Il est necessaire de rendre ce script executable en utilisant chmod +x
-#     Python 3.5 ou ulterieur recommande pour lancer ce script.
+#     Il est nécessaire de rendre ce script exécutable en utilisant chmod +x
+#     Python 3.5 ou ultérieur recommandé pour lancer ce script.
 
 import random
 import argparse
+import numpy as np
+
 
 if __name__ == "__main__":
     # Parse arguments
     parser = argparse.ArgumentParser()
-    parser.add_argument("-S", "--taille_min", required=True, type=int,
-                        help="Represente la premiere taille des matrices, qui seront de taille 2^S*2^S")
-    parser.add_argument("-t", "--nb_tailles", required=False, default=5, type=int,
-                        help="Represente le nombre de tailles consécutives des matrices à construire : \
-                        pour t, on aura des matrices de tailles allant de 2^S*2^S a 2^(S+t-1)*2^(S+t-1)")
-    parser.add_argument("-n", "--nb_exemplaires",required=False, default=5, type=int,
-                        help="Represente le nombre d'exemplaires d'une meme taille a generer")
-    parser.add_argument("-r", "--random_seed", required=False, default=1, type=int,
-                        help="Represente le germe du generateur de nombres aléatoires")
-    args = parser.parse_args()
+    parser.add_argument("-n", "--nb-enclos", \
+                        help="Représente la taille du graphe à générer", \
+                        action='store', required=True, metavar='NB_ENCLOS', type=int)
+    parser.add_argument("-m", "--taille-s", \
+                        help="Représente la taille du sous-ensemble d'enclos à placer à proximité", \
+                        action='store', required=False, metavar='TAILLE_MAX', type=int)
+    parser.add_argument("-x", "--prefixe", \
+                        help="Ajouter le préfixe indiqué aux noms des fichiers", \
+                        action='store', required=False, metavar='PREFIXE', type=str)
 
+    args = parser.parse_args()
+    if not args.prefixe:
+        args.prefixe = 'ex'
+    else:
+        args.prefixe = args.prefixe + '_'
+    if args.taille_s > args.nb_enclos:
+        print(f"La taille du sous-ensemble donnée est supérieure au nombre d'enclos, elle a été fixée à {args.nb_enclos}")
+        args.taille_s = args.nb_enclos
 
     # Parameters
-    min_v = 0
-    max_v = 5
-    a = random.seed(args.random_seed)
-    taille_min = args.taille_min
-    nb_tailles = args.nb_tailles
-    nb_exemplaires = args.nb_exemplaires
+    max_weight = 100
 
-    # Generate
-    for i in range(nb_exemplaires):
-        for j in range(taille_min, taille_min+nb_tailles):
-            with open('ex' + str(j) + '_' + str(i), 'w') as inst:
-                inst.write("%d\n" % j)
-                for k in range(2**j):
-                    for l in range((2**j)-1):
-                        v = random.randint(min_v, max_v)
-                        inst.write("%d " % v)
-                    v = random.randint(min_v, max_v)
-                    inst.write("%d\n" % v)
+    #initialize
+    tailles = []
+    poids = []
+    theme = []
 
+    #generate data
+    for i in range(args.nb_enclos):
+        tailles.append(random.randint(2, 20))
+
+        poids_i = []
+        for j in range(args.nb_enclos):
+            poids_i.append(random.randint(1, max_weight))
+            if i == j:
+                poids_i[j] = 0
+
+        poids.append(poids_i)
+
+    max_dist = np.ceil(np.sqrt(args.taille_s*11)*2)-10
+    theme = random.sample(range(args.nb_enclos),k=args.taille_s)
+
+
+
+
+    # Write
+    with open(args.prefixe + '_n' + str(args.nb_enclos) + '_m' +  str(args.taille_s) + ".txt",'w') as inst:
+        inst.write("%d %d %d\n" % (args.nb_enclos, args.taille_s, max_dist))
+
+        for i in range(args.taille_s-1):
+            inst.write("%d " % theme[i])
+        inst.write("%d\n" % theme[-1])
+
+        for i in range(args.nb_enclos):
+            inst.write("%d\n" % tailles[i])
+
+        for i in range(args.nb_enclos):
+            for j in range(args.nb_enclos-1):
+                inst.write("%d " % poids[i][j])
+            inst.write("%d\n" % poids[i][-1])
