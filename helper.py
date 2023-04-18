@@ -1,7 +1,13 @@
 import random
+import math
 
-def manhattan_distance(a, b):
-    return abs(a[0] - b[0]) + abs(a[1] - b[1])
+def manhattan_distance(enclos_a, enclos_b):
+    min_distance = float('inf')
+    for _, u in enumerate(enclos_a):
+        for _, v in enumerate(enclos_b):
+            distance = abs(u[0] - v[0]) + abs(u[1] - v[1])
+            min_distance = min(min_distance, distance)
+    return min_distance
 
 def objective_function(solution, weights, subset, k):
     # Calculate the objective function (V - U) for the given solution
@@ -31,8 +37,3 @@ def generate_neighbors(solution):
             neighbor[i], neighbor[j] = neighbor[j], neighbor[i]
             neighbors.append(neighbor)
     return neighbors
-
-
-
-
-
