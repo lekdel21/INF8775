@@ -10,7 +10,7 @@ def extract_free_cardinal_point(x, y, used_coordinates, directions):
             return (nx, ny)
     return None
 
-def generate_contiguous_enclosure(size, used_coordinates):
+def generate_contiguous_enclosure(size, used_coordinates, ):
     directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]
     x_offset, y_offset = 0, 0
     if len(used_coordinates) != 0: 
@@ -37,7 +37,6 @@ def generate_contiguous_enclosure(size, used_coordinates):
                 break
 
         if not found:
-            # Go back to the first coordinate and check if any of the cardinal points are free
             x, y = enclos[0]
             cardinal_point = extract_free_cardinal_point(x, y, used_coordinates, directions)
             if cardinal_point is not None:
@@ -51,13 +50,26 @@ def generate_contiguous_enclosure(size, used_coordinates):
     return enclos
 
 
-def generate_random_solution(enclos_sizes):
+def generate_random_solution(enclos_sizes, enclos_bonus):
     used_coordinates = set()
-    solution = []
+    solution = [[]] * len(enclos_sizes)
+    print(solution)
 
-    for size in enclos_sizes:
+    for enclos_number in enclos_bonus:
+        size = enclos_sizes[enclos_number]
         enclos = generate_contiguous_enclosure(size, used_coordinates)
-        solution.append(enclos)
+        solution[enclos_number] = enclos
+
+    for i, size in enumerate(enclos_sizes):
+        is_bonus = False
+        for enclos_number in enclos_bonus:
+            if i == enclos_number:
+                is_bonus = True
+                break
+        if(not is_bonus):
+            enclos = generate_contiguous_enclosure(size, used_coordinates)
+            solution[i] = enclos
+        
 
     return solution
 
@@ -71,8 +83,10 @@ def write_solution_to_file(solution, file_path):
 input_file_path = "n20_m15_V-74779.txt"
 n, m, k, enclos_bonus, enclos_sizes, enclos_weights = read_input_file(input_file_path)
 
+print(enclos_sizes)
+
 # Generate random solution
-random_solution = generate_random_solution(enclos_sizes)
+random_solution = generate_random_solution(enclos_sizes, enclos_bonus)
 score = calculate_score(random_solution, enclos_weights, enclos_bonus, k)
 print(score)
 

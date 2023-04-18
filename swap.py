@@ -12,10 +12,9 @@ def swap_initial(solution):
             x, y = enclosure[0]
             for dx, dy in directions:
                 x_new, y_new = x + dx, y + dy
-                if x_new > 0 and y_new > 0 and not is_coord_already_used((x_new, y_new), solution):
+                if x_new >= 0 and y_new >= 0 and not is_coord_already_used((x_new, y_new), solution):
                     enclosure.pop(-1)
                     enclosure.insert(0, (x_new, y_new))
-                    x, y = x_new, y_new
                     break
                 elif (dx, dy) == (-1, 0) and not is_optimized[i]:
                     count -= 1

@@ -14,15 +14,17 @@ def calculate_score(solution, weights, subset, k):
     U = 0
     V = 0
 
-    for i, u in enumerate(solution):
-        for j, v in enumerate(solution):
-            U += manhattan_distance(u, v) * weights[i][j]
+    for i, enclosure_weights in enumerate(weights):
+        for j, weight in enumerate(enclosure_weights):
+            U += manhattan_distance(solution[i], solution[j]) * weight
 
     max_distance = 0
     for u in subset:
         for v in subset:
-            distance = manhattan_distance(solution[u], solution[v])
+            distance = manhattan_distance(solution[u-1], solution[v-1])
             max_distance = max(max_distance, distance)
+
+    print(max_distance, k)
     if max_distance <= k:
         V = len(subset) ** 2
 
