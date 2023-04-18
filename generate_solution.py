@@ -1,6 +1,7 @@
 import random
 from read_input_file import read_input_file
-from helper import objective_function
+from helper import calculate_score
+from swap import swap_initial
 
 def extract_free_cardinal_point(x, y, used_coordinates, directions):
     for dx, dy in directions:
@@ -72,13 +73,16 @@ n, m, k, enclos_bonus, enclos_sizes, enclos_weights = read_input_file(input_file
 
 # Generate random solution
 random_solution = generate_random_solution(enclos_sizes)
+score = calculate_score(random_solution, enclos_weights, enclos_bonus, k)
+print(score)
 
-score = objective_function(random_solution, enclos_weights, enclos_bonus, k)
+initial_solution = swap_initial(random_solution)
+score = calculate_score(initial_solution, enclos_weights, enclos_bonus, k)
 print(score)
 
 # Write solution to a file
 output_file_path = "sol_n20_m15_V-74779.txt"
-write_solution_to_file(random_solution, output_file_path)
+write_solution_to_file(initial_solution, output_file_path)
 
 
 

@@ -9,7 +9,7 @@ def manhattan_distance(enclos_a, enclos_b):
             min_distance = min(min_distance, distance)
     return min_distance
 
-def objective_function(solution, weights, subset, k):
+def calculate_score(solution, weights, subset, k):
     # Calculate the objective function (V - U) for the given solution
     U = 0
     V = 0
