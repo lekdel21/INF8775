@@ -18,18 +18,3 @@ def generate_initiale_solution(enclos_sizes, enclos_weights):
             enclos_number += 1   
     return solution
 
-
-# Read input file
-input_file_path = "n20_m15_V-74779.txt"
-n, m, k, subset, enclos_sizes, enclos_weights = read_input_file(input_file_path)
-
-solution = generate_initiale_solution(enclos_sizes, enclos_weights)
-
-score = calculate_score(solution, enclos_weights, subset, k)
-print(score)
-
-solution = local_search(solution, enclos_weights, subset, k, enclos_sizes, 1000)
-
-output_file_path = "sol_n20_m15_V-74779.txt"
-write_solution_to_file(solution, output_file_path)
-
