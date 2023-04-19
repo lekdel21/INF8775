@@ -64,7 +64,7 @@ def generate_random_solution(enclos_sizes):
 def write_solution_to_file(solution, file_path):
     with open(file_path, 'w') as file:
         for enclos in solution:
-            coordinates = ' '.join(f"{x} {y}" for x, y in enclos)
+            coordinates = ' '.join(f"{int(x)} {int(y)}" for x, y in enclos)
             file.write(coordinates + '\n')
 
 # Read input file
