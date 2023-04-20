@@ -53,3 +53,27 @@ def get_enclosure_coords(size, start_point):
             enclosure_coords.append((x+i,y+j))
 
     return enclosure_coords
+
+def add_to_grid(size, start_point, last_coord):
+    enclosure_coords = []
+    x_init, y_init = start_point
+    x_last, y_last = last_coord
+    dx = 5
+    dy = 4
+    break_label = False
+    count = 0
+    for j in range(y_last - y_init + 1, dy):
+        for i in range(dx):
+            count += 1
+            enclosure_coords.append((x_init + i, y_init + j))
+            if count >= size:
+                break_label = True
+                break
+        if break_label:
+            break
+    return enclosure_coords
+
+                
+
+            
+            

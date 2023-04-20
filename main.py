@@ -7,14 +7,14 @@ from swap import local_search
 def solve(fileName, iterations, show_matrix):
     n, m, k, subset, enclos_sizes, enclos_weights = read_input_file(fileName)
 
-    solution = generate_initiale_solution(enclos_sizes, enclos_weights)
+    solution = generate_initiale_solution(enclos_sizes, enclos_weights, subset)
 
     score = calculate_score(solution, enclos_weights, subset, k)
     print(score)
 
-    solution = local_search(solution, enclos_weights, subset, k, enclos_sizes, 1000)
+    #solution = local_search(solution, enclos_weights, subset, k, enclos_sizes, 500)
 
-    output_file_path = "sol_"+filename
+    output_file_path = "sol_"+fileName
     write_solution_to_file(solution, output_file_path)
 
 
