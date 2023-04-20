@@ -2,7 +2,7 @@ from in_out_file import read_input_file, write_solution_to_file
 import math
 import numpy as np
 from score_calculator import calculate_score
-from swap import get_enclosure_coords, initial_swap, local_search, add_to_grid
+from enclosures_manipulation import get_enclosure_coords, add_to_grid
 
 def generate_initiale_solution(enclos_sizes, enclos_weights, subset):
     n = len(enclos_sizes)
@@ -41,3 +41,4 @@ def check_for_spaces(size, boxes_left):
             enclos = boxes_left[i-1].pop(-1)
             return boxes_left, enclos
     return boxes_left, -1
+

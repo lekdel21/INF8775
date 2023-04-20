@@ -9,7 +9,7 @@ while getopts "e:p" opt; do
             fileName=$OPTARG
             ;;
         p)
-            showMatrix=true
+            showSolution=true
             ;;
         \?)
             echo "Option invalide: -$OPTARG" >&2
@@ -34,6 +34,6 @@ if [ ! -f "$fileName" ]; then
     exit 1
 fi
 
-python3 ./main.py $fileName $showMatrix
+python3 ./main.py $fileName $showSolution
 
 exit 0

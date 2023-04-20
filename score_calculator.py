@@ -22,7 +22,5 @@ def calculate_score(solution, weights, subset, k):
             
     if max_distance <= k:
         V = len(subset) ** 2
-    
-    print(max_distance, k)
 
     return V - U
