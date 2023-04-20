@@ -1,7 +1,11 @@
 from score_calculator import calculate_score
 from in_out_file import read_input_file, write_solution_to_file
+import time
+
+
 # from tabu_search import tabu_search
-from tabu_search2 import tabu_search_v2
+from simulated_anneal import simulated_annealing
+
 def read_solution_from_file(file_path):
     solution = []
     with open(file_path, 'r') as file:
@@ -18,8 +22,12 @@ sol_file_path = "sol_n200_m150_V-68542542.txt"
 initial_solution = read_solution_from_file(sol_file_path)
 score = calculate_score(initial_solution, enclos_weights, enclos_bonus, k)
 print("initial score : {}".format(score))
-
-best_solution = tabu_search_v2(initial_solution, enclos_weights, enclos_bonus, k, 10, 100, neighborhood_size=10, sample_size=10)
+start = time.time()
+best_solution = simulated_annealing(initial_solution, enclos_weights, enclos_bonus, k, 
+                                    max_iterations=100, 
+                                    initial_temperature=200, 
+                                    cooling_rate=0.3)
 write_solution_to_file(best_solution, "bettersol_n200_m150_V-68542542.txt")
+print("time to execute : {} seconds".format(time.time() - start))
 score = calculate_score(best_solution, enclos_weights, enclos_bonus, k)
 print("better score : {}".format(score))

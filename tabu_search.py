@@ -1,4 +1,5 @@
-from helper import calculate_score 
+from score_calculator import calculate_score
+from concurrent.futures import ThreadPoolExecutor
 import random
 
 def generate_neighborhood(solution):
@@ -11,8 +12,10 @@ def generate_neighborhood(solution):
     return neighborhood
 
 def has_overlap_with_other_enclosures(solution, enclosure_index):
+    current_enclosure = solution[enclosure_index]
+    current_enclosure_set = set(current_enclosure)
     for i, enclosure in enumerate(solution):
-        if i != enclosure_index and has_overlap(solution[i], solution[enclosure_index]):
+        if i != enclosure_index and current_enclosure_set.intersection(enclosure):
             return True
     return False
 
@@ -72,13 +75,17 @@ def tabu_search(solution, weights, subset, k, max_iterations, tabu_list_size):
     for iteration in range(max_iterations):
         print("Iteration {}".format(iteration))
         neighborhood = generate_neighborhood(solution)
-        neighborhood_scores = [calculate_score(neighbor, weights, subset, k) for neighbor in neighborhood]
-
+        print("ok0")
+        with ThreadPoolExecutor() as executor:
+            neighborhood_scores = list(executor.map(lambda neighbor: calculate_score(neighbor, weights, subset, k), neighborhood))
+        print("ok1")
         # Sort the neighborhood solutions by their scores in descending order
         sorted_indices = sorted(range(len(neighborhood_scores)), key=lambda i: neighborhood_scores[i], reverse=True)
-
+        print("ok2")
         found_non_tabu_move = False
-        for index in sorted_indices:
+        num_neighbors_to_explore = 10
+        for index in sorted_indices[:num_neighbors_to_explore]:
+            print("ok3")
             if (solution, neighborhood[index]) not in tabu_list:
                 solution = neighborhood[index]
                 tabu_list.append((solution, neighborhood[index]))
